@@ -79,13 +79,19 @@ function update_fields()
     </div>
     <div class="row content-data">
       <div class=" col-6">
-        <div class="form-control">
-          {{table}}
-          {{fields}}
+        <div class="form-control field-container">
+          <div v-for="child of fields.child" :key="child" class="table-field table-child">
+            <span class="table-name">{{ child.REFERENCED_TABLE_NAME }}</span> <span class="table-column">({{ child.COLUMN_NAME }})</span>
+          </div>
+          <div v-for="parent of fields.parent" :key="parent" class="table-field table-parent">
+            <span class="table-name">{{ parent.TABLE_NAME }}</span> <span class="table-column">({{ parent.COLUMN_NAME }})</span>
+          </div>
         </div>
       </div>
       <div class=" col-6">
-        <div class="form-control"></div>
+        <div class="form-control">
+          {{fields}}
+        </div>
       </div>
     </div>
   </div>
@@ -93,6 +99,25 @@ function update_fields()
 <style scoped>
 .content-data{
   margin-top: 10px;
+}
+.table-column{
+  color: #00a65a;
+}
+.table-child .table-name{
+  color: #f39c12;
+}
+.table-parent .table-name{
+  color: #f56954;
+}
+
+.table-field{
+  padding: .375rem .75rem;
+}
+.table-field:hover{
+  background-color: #f5f5f5;
+}
+.field-container{
+  padding: 0px;
 }
 </style>
 

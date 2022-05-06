@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {  ref } from 'vue'
+import { ref } from 'vue'
 import { connection } from '@/global/mysql'
 
 const databases = ref([])
@@ -69,7 +69,6 @@ function update_fields()
           <option :value="Database" v-for="({Database}) in databases" :key="Database"> {{ Database }} </option>
         </select>
       </div>
-
       <div class="col-6 form-group">
         <label for="">Tables</label>
         <select name="" id="" class="form-select" v-model="table" @change="update_fields()">
@@ -79,7 +78,7 @@ function update_fields()
     </div>
     <div class="row content-data">
       <div class=" col-6">
-        <div class="form-control field-container">
+        <div class="form-control table-content">
           <div v-for="child of fields.child" :key="child" class="table-field table-child">
             <span class="table-name">{{ child.REFERENCED_TABLE_NAME }}</span> <span class="table-column">({{ child.COLUMN_NAME }})</span>
           </div>
@@ -100,16 +99,15 @@ function update_fields()
 .content-data{
   margin-top: 10px;
 }
-.table-column{
+.table-name{
   color: #00a65a;
 }
-.table-child .table-name{
-  color: #f39c12;
+.table-child .table-column{
+  color: #12c6f3;
 }
-.table-parent .table-name{
+.table-parent .table-column{
   color: #f56954;
 }
-
 .table-field{
   padding: .375rem .75rem;
   border-radius: .25rem;
@@ -117,7 +115,8 @@ function update_fields()
 .table-field:hover{
   background-color: #f5f5f5;
 }
-.field-container{
+
+.table-content{
   padding: 0px;
 }
 </style>

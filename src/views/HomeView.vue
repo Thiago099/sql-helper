@@ -112,6 +112,7 @@ function update_fields()
 
 .table-field{
   padding: .375rem .75rem;
+  border-radius: .25rem;
 }
 .table-field:hover{
   background-color: #f5f5f5;

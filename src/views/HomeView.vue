@@ -117,7 +117,7 @@ function update_fields()
   color: #12c6f3;
 }
 .table-parent .table-column{
-  color: #f56954;
+  color: #f554d2;
 }
 .table-field{
   padding: .375rem .75rem;

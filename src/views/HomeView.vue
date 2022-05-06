@@ -49,10 +49,13 @@ function update()
 }
 update()
 
-const fields = ref<foreign_key_data[]>([])
+const fields = ref({})
 function update_fields()
 {
-  fields.value = foreign_keys.value.filter((item :foreign_key_data) => item.TABLE_NAME == table.value)
+  fields.value = {
+      child:foreign_keys.value.filter((item :foreign_key_data) => item.TABLE_NAME == table.value),
+      parent:foreign_keys.value.filter((item :foreign_key_data) => item.REFERENCED_TABLE_NAME == table.value)
+    }
 }
 
 </script>

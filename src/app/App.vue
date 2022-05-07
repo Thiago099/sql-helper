@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { connection } from '@/global/mysql'
 
-import fieldContainer from '@/components/fieldContainer.vue'
-import func from 'vue-temp/vue-editor-bridge'
+import fieldContainer from './fieldContainer.vue'
+import { foreign_key_data } from './foreign_key_daya';
 
 const databases = ref([])
 const tables = ref([])
@@ -11,15 +11,9 @@ const tables = ref([])
 const database = ref<string | null>(null)
 const table = ref<string | null>(null)
 
+
 const foreign_keys = ref<foreign_key_data[]>([])
 
-interface foreign_key_data {
-  tid?:number
-  TABLE_NAME: string,
-  COLUMN_NAME: string,
-  REFERENCED_TABLE_NAME: string
-  REFERENCED_COLUMN_NAME: string,
-}
 
 connection.query('SHOW DATABASES', (err:any, results:any ) => {
   databases.value = results
@@ -66,8 +60,53 @@ function update_fields()
   find_relations()
 }
 
+const query = ref('')
+function update_query()
+{
+  let result = `<spam class="highlight">SELECT</spam> * <spam class="highlight">FROM</spam> ${table.value}<br>`
 
 
+  interface join_data{
+    parent:string
+    child:string
+    query:string
+  }
+
+  const joins: join_data[] = []
+  function join(parent:string, parent_field:string, child:string, child_field:string)
+  {
+    return `<spam class="highlight">INNER JOIN</spam> ${parent} <spam class="highlight">ON</spam> ${parent}.${parent_field} = ${child}.${child_field}<br>`
+  }
+  for(const child of active_fields.value.child)
+  {
+    joins.push({
+      parent:child.TABLE_NAME,
+      child:child.REFERENCED_TABLE_NAME,
+      query:join(child.REFERENCED_TABLE_NAME,child.REFERENCED_COLUMN_NAME,child.TABLE_NAME,child.COLUMN_NAME)
+    })
+  }
+  for(const parent of active_fields.value.parent)
+  {
+    joins.push({
+      parent:parent.REFERENCED_TABLE_NAME,
+      child:parent.TABLE_NAME,
+      query: join(parent.TABLE_NAME,parent.COLUMN_NAME,parent.REFERENCED_TABLE_NAME,parent.REFERENCED_COLUMN_NAME)
+    })
+  }
+  function build(table_name:string)
+  {
+    const current = joins.filter((join:join_data) => join.parent == table_name);
+
+    for(const join of current)
+    {
+      result += join.query
+      build(join.child)
+    }
+  }
+  build(table.value ?? '')
+
+  query.value = result
+}
 function find_relations()
 {
   fields.value = {
@@ -85,6 +124,7 @@ function find_relations()
       )
     }
   sort(fields.value)
+  update_query()
 }
 
 const active_fields = ref<{[key:string]:foreign_key_data[]}>({parent:[],child:[]})
@@ -149,14 +189,14 @@ function sort(object:{[key:string]:foreign_key_data[]})
     </div>
     <div class="row content-data">
       <div class="col">
-      <div class="form-control">
-        {{active_fields}}
+      <div class="form-control" v-html="query">
+
       </div>
       </div>
     </div>
   </div>
 </template>
-<style scoped lang="less">
+<style lang="less">
 .container{
   margin-top: 10px;
 }
@@ -168,6 +208,10 @@ function sort(object:{[key:string]:foreign_key_data[]})
     height: 100%;
     overflow-y: auto;
   }
+}
+
+.highlight{
+  color: blue;
 }
 
 </style>

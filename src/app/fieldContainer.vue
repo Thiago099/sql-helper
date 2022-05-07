@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, toRefs, defineProps} from 'vue';
+import { foreign_key_data } from './foreign_key_daya';
 const props = defineProps<{
-    fields: string
+    fields: {[key:string]:foreign_key_data[]}
 }>()
 const { fields } = toRefs(props)
 </script>
@@ -11,7 +12,7 @@ const { fields } = toRefs(props)
     <div class="form-control table-content">
         <div 
             v-for="child of fields.child" 
-            :key="child" 
+            :key="child.tid" 
             class="table-field table-child"
             @click="$emit('child', child)"
         >
@@ -19,7 +20,7 @@ const { fields } = toRefs(props)
         </div>
         <div 
             v-for="parent of fields.parent" 
-            :key="parent" 
+            :key="parent.tid" 
             class="table-field table-parent"
             @click="$emit('parent', parent)"
         >

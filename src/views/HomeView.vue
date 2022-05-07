@@ -11,6 +11,7 @@ const table = ref(null)
 const foreign_keys = ref<foreign_key_data[]>([])
 
 interface foreign_key_data {
+  tid?:number
   TABLE_NAME: string,
   COLUMN_NAME: string,
   REFERENCED_TABLE_NAME: string
@@ -42,6 +43,8 @@ function update()
       if (err) {
         console.log(err)
       } else {
+        let tid = 0
+        rows.forEach((row:foreign_key_data) => row.tid = tid++)
         foreign_keys.value = rows
       }
     })
@@ -89,7 +92,7 @@ function update_fields()
       </div>
       <div class="col-6">
         <div class="form-control">
-          {{fields}}
+          <!-- {{fields}} -->
         </div>
       </div>
     </div>

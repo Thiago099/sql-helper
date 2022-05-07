@@ -5,6 +5,10 @@ import { connection } from '@/global/mysql'
 import fieldContainer from './fieldContainer.vue'
 import { foreign_key_data } from './foreign_key_daya';
 
+const host = ref('localhost')
+const user = ref('root')
+const password = ref('')
+
 const databases = ref([])
 const tables = ref([])
 
@@ -175,6 +179,23 @@ function sort(object:{[key:string]:foreign_key_data[]})
 
 <template>
   <div class="container">
+    <div class="row">
+      <div class="col-4 form-group">
+        <label for="host">Host</label
+        ><input type="text" class="form-control" id="host">
+        </div>
+      <div class="col-4 form-group">
+        <label for="user">User</label>
+        <input type="text" class="form-control" id="user"></div>
+      <div class="col-4 form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password">
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-6"></div>
+      <div class="col-6"></div>
+    </div>
     <div class="row">
       <div class="col-6 form-group">
         <label for="">Databases</label>

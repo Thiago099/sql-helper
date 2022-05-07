@@ -12,7 +12,7 @@ const { fields } = toRefs(props)
     <div class="form-control table-content">
         <div 
             v-for="child of fields.child" 
-            :key="child.tid" 
+            :key="child.tid" z
             class="table-field table-child"
             @click="$emit('child', child)"
         >

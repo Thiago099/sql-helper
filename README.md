@@ -1,5 +1,9 @@
-# electron-vue-jest
+# description
 
+this program was made to build sql joins with a simple click
+it is currently work in progress so it yet dont support multiple references to the same table
+
+![example](https://i.imgur.com/lnxg3t4.png)
 ## Project setup
 ```
 npm install
@@ -14,16 +18,3 @@ npm run serve
 ```
 npm run build
 ```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

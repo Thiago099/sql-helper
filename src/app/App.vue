@@ -52,7 +52,7 @@ function update()
         console.log(err)
       } else {
         let tid = 0
-        rows.forEach((row:foreign_key_data) => {row.tid = tid++})
+        rows.forEach((row:foreign_key_data) => {row.tid = tid++;row.display_dropdown = false})
         foreign_keys.value = rows
       }
     })
@@ -88,9 +88,9 @@ function update_query()
   }
 
   const joins: join_data[] = []
-  function join(parent:string, parent_field:string, child:string, child_field:string, alias:string, relative?:foreign_key_data)
+  function join(parent:string, parent_field:string, child:string, child_field:string, alias:string, relative?:foreign_key_data, join?:string)
   {
-    return `<span class="highlight">INNER JOIN</span> ${parent == alias ? alias:`${parent} <span class="highlight">AS</span> ${alias}`} <span class="highlight">ON</span> ${alias}.${parent_field} = ${relative?.alias ?? child}.${child_field}<br>`
+    return `<span class="highlight">${join} JOIN</span> ${parent == alias ? alias:`${parent} <span class="highlight">AS</span> ${alias}`} <span class="highlight">ON</span> ${alias}.${parent_field} = ${relative?.alias ?? child}.${child_field}<br>`
   }
   for(const child of active_fields.value.child)
   {
@@ -99,7 +99,7 @@ function update_query()
       element:child,
       parent:child.TABLE_NAME,
       child:child.REFERENCED_TABLE_NAME,
-      query:join(child.REFERENCED_TABLE_NAME,child.REFERENCED_COLUMN_NAME,child.TABLE_NAME,child.COLUMN_NAME,child.alias,child.relative)
+      query:join(child.REFERENCED_TABLE_NAME,child.REFERENCED_COLUMN_NAME,child.TABLE_NAME,child.COLUMN_NAME,child.alias,child.relative,child.join)
     })
   }
   for(const parent of active_fields.value.parent)
@@ -109,7 +109,7 @@ function update_query()
       element:parent,
       parent:parent.REFERENCED_TABLE_NAME,
       child:parent.TABLE_NAME,
-      query: join(parent.TABLE_NAME,parent.COLUMN_NAME,parent.REFERENCED_TABLE_NAME,parent.REFERENCED_COLUMN_NAME,parent.alias,parent.relative)
+      query: join(parent.TABLE_NAME,parent.COLUMN_NAME,parent.REFERENCED_TABLE_NAME,parent.REFERENCED_COLUMN_NAME,parent.alias,parent.relative,parent.join)
     })
   }
 
@@ -146,10 +146,12 @@ function find_relations()
     }
   fields.value.child.forEach((item:foreign_key_data) => 
   {
+    item.join = 'INNER'
     item.alias = item.REFERENCED_TABLE_NAME
     item.relative = affected.value.find(affected => affected.name == item.TABLE_NAME)?.object
   })
   fields.value.parent.forEach((item:foreign_key_data) => {
+      item.join = 'INNER'
       item.alias = item.TABLE_NAME
       item.relative = affected.value.find(affected => affected.name == item.REFERENCED_TABLE_NAME)?.object
   })
@@ -203,7 +205,7 @@ function sort(object:{[key:string]:foreign_key_data[]})
       </div>
     </div>
     <div class="row content-data">
-      <div class="col-6">
+      <div class="col-4">
         <field-container
           :active="false"
           @child="move($event, 'child')"
@@ -212,7 +214,7 @@ function sort(object:{[key:string]:foreign_key_data[]})
           :fields="fields"
         />
       </div>
-      <div class="col-6">
+      <div class="col-8">
           <field-container
             :active="true"
 

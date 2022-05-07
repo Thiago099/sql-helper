@@ -18,7 +18,19 @@ const { fields,active } = toRefs(props)
             :class="{'error': !child.supported && active}"
             @click="$emit('child', child)"
         >
-        <span class="table-name">{{ child.REFERENCED_TABLE_NAME }}</span> <span class="table-column">({{ child.COLUMN_NAME }})</span>
+        <div v-if="active" style="display:inline"  @click="$event.stopPropagation()">
+            <span class="dropdown-toggle" @click="child.display_dropdown = true;" tabindex="0"  @blur="child.display_dropdown = false"> {{child.join}}
+                <div class="dropdown-menu" :class="{'show':child.display_dropdown}" >
+                    <a class="dropdown-item" href="#" @mousedown="child.join = 'INNER';$emit('update')">INNER</a>
+                    <a class="dropdown-item" href="#" @mousedown="child.join = 'LEFT';$emit('update')">LEFT</a>
+                    <a class="dropdown-item" href="#" @mousedown="child.join = 'RIGHT';$emit('update')">RIGHT</a>
+                </div>
+            </span>&nbsp;
+        </div>  
+            <span class="table-name">{{ child.REFERENCED_TABLE_NAME }}</span> <span class="table-column">({{ child.COLUMN_NAME }})</span>
+            <div v-if="active" style="display:inline"  @click="$event.stopPropagation()">
+            &nbsp;<input type="text" class="form-control" style="display: inline;width: 150px;margin:0px" v-model="child.alias" @input="$emit('update')">
+            </div>
         </div>
         <div 
             v-for="parent of fields.parent" 
@@ -28,15 +40,18 @@ const { fields,active } = toRefs(props)
 
             @click="$emit('parent', parent)"
         >
+        <div v-if="active" style="display:inline"  @click="$event.stopPropagation()">
+            <span class="dropdown-toggle" @click="parent.display_dropdown = true;" tabindex="0"  @blur="parent.display_dropdown = false"> {{parent.join}}
+                <div class="dropdown-menu" :class="{'show':parent.display_dropdown}" >
+                    <a class="dropdown-item" href="#" @mousedown="parent.join = 'INNER';$emit('update')">INNER</a>
+                    <a class="dropdown-item" href="#" @mousedown="parent.join = 'LEFT';$emit('update')">LEFT</a>
+                    <a class="dropdown-item" href="#" @mousedown="parent.join = 'RIGHT';$emit('update')">RIGHT</a>
+                </div>
+            </span>&nbsp;
+        </div>  
         <span class="table-name">{{ parent.TABLE_NAME }}</span> <span class="table-column">({{ parent.COLUMN_NAME }})</span>
             <div v-if="active" style="display:inline"  @click="$event.stopPropagation()">
-                <!-- <span > <span class="dropdown-toggle"> INNER</span>&nbsp;</span>
-                <div class="dropdown-menu show">
-                    <a class="dropdown-item" href="#">INNER</a>
-                    <a class="dropdown-item" href="#">LEFT</a>
-                    <a class="dropdown-item" href="#">RIGHT</a>
-                </div> -->
-                &nbsp;<input type="text" class="form-control" style="display: inline;width: auto;" v-model="parent.alias" @input="$emit('update')">
+                &nbsp;<input type="text" class="form-control" style="display: inline;width: 150px;margin:0px" v-model="parent.alias" @input="$emit('update')">
             </div>
         </div>
     </div>

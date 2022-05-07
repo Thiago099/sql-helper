@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, toRefs, defineProps} from 'vue';
-import { foreign_key_data } from './foreign_key_daya';
+import { foreign_key_data } from './foreign_key_data';
 const props = defineProps<{
     fields: {[key:string]:foreign_key_data[]}
     active:boolean
@@ -29,15 +29,15 @@ const { fields,active } = toRefs(props)
             @click="$emit('parent', parent)"
         >
         <span class="table-name">{{ parent.TABLE_NAME }}</span> <span class="table-column">({{ parent.COLUMN_NAME }})</span>
-            <!-- <div v-if="active" style="display:inline"  @click="$event.stopPropagation()">
-                <span > <span class="dropdown-toggle"> INNER</span>&nbsp;</span>
+            <div v-if="active" style="display:inline"  @click="$event.stopPropagation()">
+                <!-- <span > <span class="dropdown-toggle"> INNER</span>&nbsp;</span>
                 <div class="dropdown-menu show">
                     <a class="dropdown-item" href="#">INNER</a>
                     <a class="dropdown-item" href="#">LEFT</a>
                     <a class="dropdown-item" href="#">RIGHT</a>
-                </div>
-                <input type="text" class="form-control" style="display: inline;width: auto;">
-            </div> -->
+                </div> -->
+                &nbsp;<input type="text" class="form-control" style="display: inline;width: auto;" v-model="parent.alias" @input="$emit('update')">
+            </div>
         </div>
     </div>
 </template>

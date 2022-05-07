@@ -1,7 +1,8 @@
 export interface foreign_key_data {
     tid?:number
     supported?:boolean
-
+    alias:string,
+    relative?:foreign_key_data,
 
     TABLE_NAME: string,
     COLUMN_NAME: string,

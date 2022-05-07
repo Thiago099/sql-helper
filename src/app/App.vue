@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { connection } from '@/global/mysql'
 
 import fieldContainer from './fieldContainer.vue'
-import { foreign_key_data } from './foreign_key_daya';
+import { foreign_key_data } from './foreign_key_data';
 
 const databases = ref([])
 const tables = ref([])
@@ -15,8 +15,11 @@ const table = ref<string | null>(null)
 const foreign_keys = ref<foreign_key_data[]>([])
 
 const fields = ref<{[key:string]:foreign_key_data[]}>({parent:[],child:[]})
-
-const affected = ref<string[]>([])
+interface iaffected{
+  name:string,
+  object?: foreign_key_data
+}
+const affected = ref<iaffected[]>([])
 
 const active_fields = ref<{[key:string]:foreign_key_data[]}>({parent:[],child:[]})
 
@@ -56,7 +59,7 @@ function update()
   }
   active_fields.value = {parent:[],child:[]}
   fields.value = {parent:[],child:[]}
-  affected.value = [table.value ?? '']
+  affected.value = [{name:table.value ?? ''}]
   query.value = ''
 
 }
@@ -67,7 +70,7 @@ update()
 function update_fields()
 {
   active_fields.value = {parent:[],child:[]}
-  affected.value = [table.value ?? '']
+  affected.value = [{name:table.value ?? ''}]
   find_relations()
 }
 
@@ -85,9 +88,9 @@ function update_query()
   }
 
   const joins: join_data[] = []
-  function join(parent:string, parent_field:string, child:string, child_field:string)
+  function join(parent:string, parent_field:string, child:string, child_field:string, alias:string, relative?:foreign_key_data)
   {
-    return `<span class="highlight">INNER JOIN</span> ${parent} <span class="highlight">ON</span> ${parent}.${parent_field} = ${child}.${child_field}<br>`
+    return `<span class="highlight">INNER JOIN</span> ${parent == alias ? alias:`${parent} <span class="highlight">AS</span> ${alias}`} <span class="highlight">ON</span> ${alias}.${parent_field} = ${relative?.alias ?? child}.${child_field}<br>`
   }
   for(const child of active_fields.value.child)
   {
@@ -96,7 +99,7 @@ function update_query()
       element:child,
       parent:child.TABLE_NAME,
       child:child.REFERENCED_TABLE_NAME,
-      query:join(child.REFERENCED_TABLE_NAME,child.REFERENCED_COLUMN_NAME,child.TABLE_NAME,child.COLUMN_NAME)
+      query:join(child.REFERENCED_TABLE_NAME,child.REFERENCED_COLUMN_NAME,child.TABLE_NAME,child.COLUMN_NAME,child.alias,child.relative)
     })
   }
   for(const parent of active_fields.value.parent)
@@ -106,7 +109,7 @@ function update_query()
       element:parent,
       parent:parent.REFERENCED_TABLE_NAME,
       child:parent.TABLE_NAME,
-      query: join(parent.TABLE_NAME,parent.COLUMN_NAME,parent.REFERENCED_TABLE_NAME,parent.REFERENCED_COLUMN_NAME)
+      query: join(parent.TABLE_NAME,parent.COLUMN_NAME,parent.REFERENCED_TABLE_NAME,parent.REFERENCED_COLUMN_NAME,parent.alias,parent.relative)
     })
   }
 
@@ -130,17 +133,27 @@ function find_relations()
   fields.value = {
       child: foreign_keys.value.filter(
           (item :foreign_key_data) => 
-          affected.value.includes(item.TABLE_NAME) && 
-          !active_fields.value.child.includes(item) &&
-          !active_fields.value.parent.includes(item)
+              affected.value.some(affected => affected.name == item.TABLE_NAME) &&
+              !active_fields.value.child.includes(item) &&
+              !active_fields.value.parent.includes(item)
         ),
       parent: foreign_keys.value.filter(
         (item :foreign_key_data) => 
-          affected.value.includes(item.REFERENCED_TABLE_NAME) && 
+          affected.value.some(affected => affected.name == item.REFERENCED_TABLE_NAME) && 
           !active_fields.value.parent.includes(item) &&
           !active_fields.value.child.includes(item)
       )
     }
+  fields.value.child.forEach((item:foreign_key_data) => 
+  {
+    item.alias = item.REFERENCED_TABLE_NAME
+    item.relative = affected.value.find(affected => affected.name == item.TABLE_NAME)?.object
+  })
+  fields.value.parent.forEach((item:foreign_key_data) => {
+      item.alias = item.TABLE_NAME
+      item.relative = affected.value.find(affected => affected.name == item.REFERENCED_TABLE_NAME)?.object
+  })
+
   sort(fields.value)
   update_query()
 }
@@ -150,7 +163,7 @@ function move(object:foreign_key_data, destination:string)
 {
   fields.value[destination] = fields.value[destination].filter((item:foreign_key_data) => item.tid != object.tid)
   active_fields.value[destination].push(object)
-  affected.value.push(destination == 'child' ? object.REFERENCED_TABLE_NAME : object.TABLE_NAME)
+  affected.value.push({name:destination == 'child' ? object.REFERENCED_TABLE_NAME : object.TABLE_NAME, object})
   find_relations()
   sort(active_fields.value)
 }
@@ -160,7 +173,7 @@ function back(object:foreign_key_data, destination:string)
   active_fields.value[destination] = active_fields.value[destination].filter((item:foreign_key_data) => item.tid != object.tid)
   fields.value[destination].push(object)
   const table_name = destination == 'child' ? object.REFERENCED_TABLE_NAME : object.TABLE_NAME
-  affected.value = affected.value.filter((item:string) => item != table_name)
+  affected.value = affected.value.filter((item:iaffected) => item.name != table_name)
   find_relations()
   sort(fields.value)
 }
@@ -195,6 +208,7 @@ function sort(object:{[key:string]:foreign_key_data[]})
           :active="false"
           @child="move($event, 'child')"
           @parent="move($event, 'parent')"
+          @update="update_query()"
           :fields="fields"
         />
       </div>
@@ -205,6 +219,7 @@ function sort(object:{[key:string]:foreign_key_data[]})
             @child="back($event, 'child')"
             @parent="back($event, 'parent')"
             :fields="active_fields"
+            @update="update_query()"
           />
       </div>
     </div>

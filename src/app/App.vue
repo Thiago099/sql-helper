@@ -14,6 +14,14 @@ const table = ref<string | null>(null)
 
 const foreign_keys = ref<foreign_key_data[]>([])
 
+const fields = ref<{[key:string]:foreign_key_data[]}>({parent:[],child:[]})
+
+const affected = ref<string[]>([])
+
+const active_fields = ref<{[key:string]:foreign_key_data[]}>({parent:[],child:[]})
+
+const query = ref('')
+
 
 connection.query('SHOW DATABASES', (err:any, results:any ) => {
   databases.value = results
@@ -41,17 +49,20 @@ function update()
         console.log(err)
       } else {
         let tid = 0
-        rows.forEach((row:foreign_key_data) => row.tid = tid++)
+        rows.forEach((row:foreign_key_data) => {row.tid = tid++})
         foreign_keys.value = rows
       }
     })
   }
+  active_fields.value = {parent:[],child:[]}
+  fields.value = {parent:[],child:[]}
+  affected.value = [table.value ?? '']
+  query.value = ''
+
 }
 update()
 
-const fields = ref<{[key:string]:foreign_key_data[]}>({parent:[],child:[]})
 
-const affected = ref<string[]>([])
 
 function update_fields()
 {
@@ -60,13 +71,14 @@ function update_fields()
   find_relations()
 }
 
-const query = ref('')
+
 function update_query()
 {
-  let result = `<spam class="highlight">SELECT</spam> * <spam class="highlight">FROM</spam> ${table.value}<br>`
+  let result = `<span class="highlight">SELECT</span> * <span class="highlight">FROM</span> ${table.value}<br>`
 
 
   interface join_data{
+    element:foreign_key_data
     parent:string
     child:string
     query:string
@@ -75,11 +87,13 @@ function update_query()
   const joins: join_data[] = []
   function join(parent:string, parent_field:string, child:string, child_field:string)
   {
-    return `<spam class="highlight">INNER JOIN</spam> ${parent} <spam class="highlight">ON</spam> ${parent}.${parent_field} = ${child}.${child_field}<br>`
+    return `<span class="highlight">INNER JOIN</span> ${parent} <span class="highlight">ON</span> ${parent}.${parent_field} = ${child}.${child_field}<br>`
   }
   for(const child of active_fields.value.child)
   {
+    child.supported = false
     joins.push({
+      element:child,
       parent:child.TABLE_NAME,
       child:child.REFERENCED_TABLE_NAME,
       query:join(child.REFERENCED_TABLE_NAME,child.REFERENCED_COLUMN_NAME,child.TABLE_NAME,child.COLUMN_NAME)
@@ -87,18 +101,22 @@ function update_query()
   }
   for(const parent of active_fields.value.parent)
   {
+    parent.supported = false
     joins.push({
+      element:parent,
       parent:parent.REFERENCED_TABLE_NAME,
       child:parent.TABLE_NAME,
       query: join(parent.TABLE_NAME,parent.COLUMN_NAME,parent.REFERENCED_TABLE_NAME,parent.REFERENCED_COLUMN_NAME)
     })
   }
+
   function build(table_name:string)
   {
     const current = joins.filter((join:join_data) => join.parent == table_name);
 
     for(const join of current)
     {
+      join.element.supported = true
       result += join.query
       build(join.child)
     }
@@ -127,7 +145,7 @@ function find_relations()
   update_query()
 }
 
-const active_fields = ref<{[key:string]:foreign_key_data[]}>({parent:[],child:[]})
+
 function move(object:foreign_key_data, destination:string)
 {
   fields.value[destination] = fields.value[destination].filter((item:foreign_key_data) => item.tid != object.tid)
@@ -174,6 +192,7 @@ function sort(object:{[key:string]:foreign_key_data[]})
     <div class="row content-data">
       <div class="col-6">
         <field-container
+          :active="false"
           @child="move($event, 'child')"
           @parent="move($event, 'parent')"
           :fields="fields"
@@ -181,6 +200,8 @@ function sort(object:{[key:string]:foreign_key_data[]})
       </div>
       <div class="col-6">
           <field-container
+            :active="true"
+
             @child="back($event, 'child')"
             @parent="back($event, 'parent')"
             :fields="active_fields"
@@ -197,8 +218,8 @@ function sort(object:{[key:string]:foreign_key_data[]})
   </div>
 </template>
 <style lang="less">
-.container{
-  margin-top: 10px;
+.row{
+  margin-top: 10px !important;
 }
 .content-data{
   margin-top: 10px;
@@ -213,6 +234,8 @@ function sort(object:{[key:string]:foreign_key_data[]})
 .highlight{
   color: blue;
 }
+
+
 
 </style>
 

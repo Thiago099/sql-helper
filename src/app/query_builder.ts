@@ -15,9 +15,48 @@ export const active_fields = ref<{ [key: string]: foreign_key_data[] }>({ parent
 
 export const query = ref('')
 
+import { table_fields } from './fields_selector'
 
 export function update_query() {
-    let result = `<span class="highlight">SELECT</span> * <span class="highlight">FROM</span> <span class="highlight-main">${table.value}</span><br>`
+
+    let all_selected_tables = true
+
+    let selected_tables = ''
+
+    for(const field of table_fields.value)
+    {
+        console.log(field)
+        let all_selected_columns = true
+        let none_selected = true
+        let selected_columns = ''
+        for(const column of field.columns)
+        {
+            if(!column.selected)
+            {
+                all_selected_tables = false
+                all_selected_columns = false
+            }
+            else
+            {
+                none_selected = false
+                selected_columns += `<span class="${field.child==null?'':field.child?'highlight-child':'highlight-parent'}">\`${field.table}\`</span>.\`${column.name}\`,<br>`
+            }
+        }
+        if(!none_selected)
+        {
+            if(!all_selected_columns)
+            {
+                selected_tables += selected_columns
+            }
+            else
+            {
+                selected_tables += `<span class="${field.child==null?'':field.child?'highlight-child':'highlight-parent'}">\`${field.table}\`</span>.*,<br>`
+            }
+        }
+    }
+    const fields = all_selected_tables ? '*' : selected_tables.slice(0, -5) + '<br>'
+
+    let result = `<span class="highlight">SELECT</span> ${fields} <span class="highlight">FROM</span> <span class="highlight-main">${table.value}</span><br>`
 
 
     interface join_data {
@@ -68,6 +107,8 @@ export function update_query() {
 
     query.value = result
 }
+import { find_fields } from './fields_selector';
+
 export function find_relations() {
     fields.value = {
         child: foreign_keys.value.filter(
@@ -98,6 +139,7 @@ export function find_relations() {
 
     sort(fields.value)
     update_query()
+    find_fields()
 }
 
 

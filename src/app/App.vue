@@ -4,9 +4,20 @@ import fieldContainer from './fieldContainer.vue'
 
 import { database, databases, table, tables, update, update_fields } from './database_selector'
 
-import { move, back, active_fields, update_query, fields, query } from './fields_builder'
+import { move, back, active_fields, update_query, fields, query } from './query_builder'
+
+import { table_fields } from './fields_selector'
 
 update()
+
+function set_selected(e:any, objects:any)
+{
+    const value = e.target?.checked;
+    objects.forEach((object:any) => {
+        object.selected = value;
+    });
+    update_query()
+}
 
 </script>
 
@@ -47,9 +58,14 @@ update()
           />
       </div>
     </div>
-    <!-- <div class="content-data form-control">
-
-    </div> -->
+    <div class="content-data form-control">
+      <div v-for="({table, columns}) of table_fields" :key="table">
+      <input type="checkbox" :checked="columns.every((item: any) => item.selected == true)" @click="set_selected($event, columns)">   {{table}}
+        <div v-for="(column) of columns" :key="column.name">
+          &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" v-model="column.selected" @change="update_query()"> {{column.name}}
+        </div >
+      </div>
+    </div>
     <div class="row content-data">
       <div class="col">
         <div class="form-control" v-html="query">

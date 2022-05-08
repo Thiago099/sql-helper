@@ -22,7 +22,7 @@ function set_selected(e:any, objects:any)
 </script>
 
 <template>
-  <div class="container">
+  <div class="container" >
     <div class="row">
       <div class="col-6 form-group">
         <label for="">Databases</label>
@@ -43,7 +43,7 @@ function set_selected(e:any, objects:any)
         </div>
       </div>
     </div>
-    <div class="row content-data">
+    <div class="row">
       <div class="col-4">
         <field-container
           :active="false"
@@ -85,14 +85,14 @@ function set_selected(e:any, objects:any)
   margin-top: 10px !important;
 }
 .content-data{
-  min-height: 100px;
-  max-height: 300px;
+  height: 26vh;
+  display:block;
   overflow-y: auto;
   margin-top: 10px;
-  height: 100%;
-  height: 100%;
+  display: inline-block;
   .form-control{
-    height: 100%;
+    height:80%;
+
     overflow-y: auto;
   }
 }

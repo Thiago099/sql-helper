@@ -33,7 +33,7 @@ function act(event:string,element:foreign_key_data) {
 
 
 <template>
-    <div class="form-control table-content">
+    <div class="form-control table-content content-data">
         <div 
             v-for="child of fields.child" 
             :key="child.tid"

@@ -17,8 +17,8 @@ export function find_fields()
 
     function find_tables(table: any)
     {
-        connection.query(`SELECT COLUMN_NAME \`column\` FROM information_schema.columns WHERE table_schema = database() and table_name='${table.name}'`,
-        (error,result)=>{
+        connection.query(`SELECT COLUMN_NAME \`column\` FROM information_schema.columns WHERE table_schema = database() and table_name='${table.name}' ORDER BY COLUMN_NAME`,
+        (error:any,result:any)=>{
             const columns:any = []
             result.forEach((item:any) => columns.push({name:item.column,selected:true}))
             table_fields.value.push({table,child:table.object?.child,columns})

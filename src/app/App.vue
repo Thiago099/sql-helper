@@ -79,9 +79,12 @@ update()
 .highlight-child{
     color: #12c6f3;
 }
+
 .highlight-parent{
     color: #f554d2;
 }
-
+.highlight-main{
+    color: #00a65a;
+}
 </style>
 

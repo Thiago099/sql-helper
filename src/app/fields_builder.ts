@@ -17,7 +17,7 @@ export const query = ref('')
 
 
 export function update_query() {
-    let result = `<span class="highlight">SELECT</span> * <span class="highlight">FROM</span> ${table.value}<br>`
+    let result = `<span class="highlight">SELECT</span> * <span class="highlight">FROM</span> <span class="highlight-main">${table.value}</span><br>`
 
 
     interface join_data {
@@ -30,7 +30,7 @@ export function update_query() {
     const joins: join_data[] = []
     function join(parent: string, parent_field: string, child: string, child_field: string, alias: string, relative?: foreign_key_data, join?: string, element?:foreign_key_data) {
         const colored_element = `<span class="${element?.child?'highlight-child':'highlight-parent'}">`
-        const colored_relative = relative?.alias?`<span class="${relative?.child?'highlight-child':'highlight-parent'}">`:'<span>'
+        const colored_relative = relative?.alias?`<span class="${relative?.child?'highlight-child':'highlight-parent'}">`:'<span class="highlight-main">'
         return `<span class="highlight">${join} JOIN</span> ${colored_element}${parent == alias ? alias : `${parent} <span class="highlight">AS</span> ${alias}`} <span class="highlight">ON</span> ${alias}</span>.${parent_field} = ${colored_relative}${relative?.alias ?? child}</span>.${child_field}<br>`
     }
     for (const child of active_fields.value.child) {

@@ -21,7 +21,7 @@ export function find_fields()
         (error,result)=>{
             const columns:any = []
             result.forEach((item:any) => columns.push({name:item.column,selected:true}))
-            table_fields.value.push({table:table.name,child:table.object?.child,columns})
+            table_fields.value.push({table,child:table.object?.child,columns})
         })
     }
 }

@@ -60,7 +60,7 @@ function set_selected(e:any, objects:any)
     </div>
     <div class="content-data form-control">
       <div v-for="({table, columns}) of table_fields" :key="table">
-      <input type="checkbox" :checked="columns.every((item: any) => item.selected == true)" @click="set_selected($event, columns)">   {{table}}
+      <input type="checkbox" :checked="columns.every((item: any) => item.selected == true)" @click="set_selected($event, columns)">   {{table?.object?.alias ?? table.name}}
         <div v-for="(column) of columns" :key="column.name">
           &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" v-model="column.selected" @change="update_query()"> {{column.name}}
         </div >

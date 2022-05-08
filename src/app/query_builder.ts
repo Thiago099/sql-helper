@@ -15,10 +15,9 @@ export const active_fields = ref<{ [key: string]: foreign_key_data[] }>({ parent
 
 export const query = ref('')
 
-import { table_fields } from './fields_selector'
+import { table_fields, find_fields } from './fields_selector'
 
 export function update_query() {
-
     let all_selected_tables = true
 
     let selected_tables = ''
@@ -39,7 +38,7 @@ export function update_query() {
             else
             {
                 none_selected = false
-                selected_columns += `<span class="${field.child==null?'':field.child?'highlight-child':'highlight-parent'}">\`${field.table}\`</span>.\`${column.name}\`,<br>`
+                selected_columns += `<span class="${field.child==null?'':field.child?'highlight-child':'highlight-parent'}">\`${field.table?.object?.alias ?? field.table.name}\`</span>.\`${column.name}\`,<br>`
             }
         }
         if(!none_selected)
@@ -50,7 +49,7 @@ export function update_query() {
             }
             else
             {
-                selected_tables += `<span class="${field.child==null?'':field.child?'highlight-child':'highlight-parent'}">\`${field.table}\`</span>.*,<br>`
+                selected_tables += `<span class="${field.child==null?'':field.child?'highlight-child':'highlight-parent'}">\`${field.table?.object?.alias ?? field.table.name}\`</span>.*,<br>`
             }
         }
     }
@@ -107,7 +106,6 @@ export function update_query() {
 
     query.value = result
 }
-import { find_fields } from './fields_selector';
 
 export function find_relations() {
     fields.value = {
@@ -138,8 +136,8 @@ export function find_relations() {
     })
 
     sort(fields.value)
-    update_query()
     find_fields()
+    update_query()
 }
 
 

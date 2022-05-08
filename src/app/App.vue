@@ -79,6 +79,9 @@ function set_selected(e:any, objects:any)
   margin-top: 10px !important;
 }
 .content-data{
+  min-height: 100px;
+  max-height: 300px;
+  overflow-y: auto;
   margin-top: 10px;
   height: 100%;
   height: 100%;

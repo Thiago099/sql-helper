@@ -38,7 +38,7 @@ export function update_query() {
             else
             {
                 none_selected = false
-                selected_columns += `<span class="${field.child==null?'':field.child?'highlight-child':'highlight-parent'}">\`${field.table?.object?.alias ?? field.table.name}\`</span>.\`${column.name}\`,<br>`
+                selected_columns += `<span class="${field.child==null?'highlight-main':field.child?'highlight-child':'highlight-parent'}">\`${field.table?.object?.alias ?? field.table.name}\`</span>.\`${column.name}\`,<br>`
             }
         }
         if(!none_selected)
@@ -55,7 +55,7 @@ export function update_query() {
     }
     const fields = all_selected_tables ? '*' : selected_tables.slice(0, -5) + '<br>'
 
-    let result = `<span class="highlight">SELECT</span> ${fields} <span class="highlight">FROM</span> <span class="highlight-main">${table.value}</span><br>`
+    let result = `<span class="highlight">SELECT</span> ${fields} <span class="highlight">FROM</span> <span class="highlight-main">\`${table.value}\`</span><br>`
 
 
     interface join_data {
@@ -69,7 +69,7 @@ export function update_query() {
     function join(parent: string, parent_field: string, child: string, child_field: string, alias: string, relative?: foreign_key_data, join?: string, element?:foreign_key_data) {
         const colored_element = `<span class="${element?.child?'highlight-child':'highlight-parent'}">`
         const colored_relative = relative?.alias?`<span class="${relative?.child?'highlight-child':'highlight-parent'}">`:'<span class="highlight-main">'
-        return `<span class="highlight">${join} JOIN</span> ${colored_element}${parent == alias ? alias : `${parent} <span class="highlight">AS</span> ${alias}`} <span class="highlight">ON</span> ${alias}</span>.${parent_field} = ${colored_relative}${relative?.alias ?? child}</span>.${child_field}<br>`
+        return `<span class="highlight">${join} JOIN</span> ${colored_element}${parent == alias ? `\`${alias}\`` : `\`${parent}\` <span class="highlight">AS</span> \`${alias}\``} <span class="highlight">ON</span> \`${alias}\`</span>.\`${parent_field}\` = ${colored_relative}\`${relative?.alias ?? child}\`</span>.\`${child_field}\`<br>`
     }
     for (const child of active_fields.value.child) {
         child.supported = false

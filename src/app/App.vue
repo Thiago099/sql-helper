@@ -165,6 +165,7 @@ function move(object:foreign_key_data, destination:string)
 {
   fields.value[destination] = fields.value[destination].filter((item:foreign_key_data) => item.tid != object.tid)
   active_fields.value[destination].push(object)
+  object.alias = destination == 'child' ? object.REFERENCED_TABLE_NAME : object.TABLE_NAME
   affected.value.push({name:destination == 'child' ? object.REFERENCED_TABLE_NAME : object.TABLE_NAME, object})
   find_relations()
   sort(active_fields.value)

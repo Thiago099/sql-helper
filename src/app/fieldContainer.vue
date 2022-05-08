@@ -13,7 +13,7 @@ const { fields,active } = toRefs(props)
     <div class="form-control table-content">
         <div 
             v-for="child of fields.child" 
-            :key="child.tid" z
+            :key="child.tid"
             class="table-field table-child"
             :class="{'error': !child.supported && active}"
             @click="$emit('child', child)"

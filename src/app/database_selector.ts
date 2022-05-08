@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { foreign_key_data } from './foreign_key_data';
 
-import { foreign_keys, active_fields, fields, affected, query, find_relations} from './fields_builder'
+import { foreign_keys, active_fields, fields, affected, query, find_relations} from './query_builder'
 
 export const databases = ref([])
 export const tables = ref([])
@@ -9,7 +9,7 @@ export const tables = ref([])
 export const database = ref<string | null>(null)
 export const table = ref<string | null>(null)
 
-import { table_fields } from './fields';
+import { table_fields } from './fields_selector';
 
 import { connection } from '@/global/mysql'
 

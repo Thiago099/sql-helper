@@ -24,7 +24,6 @@ export function update_query() {
 
     for(const field of table_fields.value)
     {
-        console.log(field)
         let all_selected_columns = true
         let none_selected = true
         let selected_columns = ''

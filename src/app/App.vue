@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import fieldContainer from './fieldContainer.vue'
 
-import { database, databases, table, tables, update, update_fields } from './database_selector'
+import { database, databases, table, tables, update_databases ,update, update_fields } from './database_selector'
 
 import { move, back, active_fields, update_query, fields, query } from './query_builder'
 
@@ -26,15 +26,21 @@ function set_selected(e:any, objects:any)
     <div class="row">
       <div class="col-6 form-group">
         <label for="">Databases</label>
-        <select name="" id="" v-model="database" class="form-select" @change="update()">
-          <option :value="Database" v-for="({Database}) in databases" :key="Database"> {{ Database }} </option>
-        </select>
+        <div class="input-group">
+          <select name="" id="" v-model="database" class="form-select" @change="update()">
+            <option :value="Database" v-for="({Database}) in databases" :key="Database"> {{ Database }} </option>
+          </select>
+            <button class="btn btn-primary" @click="update_databases();update()"><i class="fa fa-rotate-left" ></i></button>
+        </div>
       </div>
       <div class="col-6 form-group">
         <label for="">Tables</label>
-        <select name="" id="" class="form-select" v-model="table" @change="update_fields()">
-          <option :value="table" v-for="table in tables" :key="table"> {{ table }} </option>
-        </select>
+        <div class="input-group">
+          <select name="" id="" class="form-select" v-model="table" @change="update_fields()">
+            <option :value="table" v-for="table in tables" :key="table"> {{ table }} </option>
+          </select>
+          <button class="btn btn-primary" @click="update()"><i class="fa fa-rotate-left" ></i></button>
+        </div>
       </div>
     </div>
     <div class="row content-data">

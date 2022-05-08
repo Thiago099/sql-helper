@@ -3,7 +3,7 @@
 this program was made to build sql joins with a simple click
 it is currently work in progress so it yet dont support multiple references to the same table
 
-![example](https://i.imgur.com/lnxg3t4.png)
+![example](https://i.imgur.com/pzXfVul.png)
 ## Project setup
 ```
 npm install

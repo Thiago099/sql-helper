@@ -13,9 +13,13 @@ import { table_fields } from './fields_selector';
 
 import { connection } from '@/global/mysql'
 
-connection.query('SHOW DATABASES', (err: any, results: any) => {
-    databases.value = results
-})
+update_databases()
+export function update_databases()
+{
+    connection.query('SHOW DATABASES', (err: any, results: any) => {
+        databases.value = results
+    })
+}
 
 export function update() {
     if (database.value != null) {

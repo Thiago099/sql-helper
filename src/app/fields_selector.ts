@@ -20,9 +20,8 @@ export function find_fields()
         connection.query(`SELECT COLUMN_NAME \`column\` FROM information_schema.columns WHERE table_schema = database() and table_name='${table.name}'`,
         (error,result)=>{
             const columns:any = []
-            console.log(table.object?.child)
-            result.forEach((item:any) => columns.push({name:item.column,child:table.object?.child,selected:true}))
-            table_fields.value.push({table:table.name,columns})
+            result.forEach((item:any) => columns.push({name:item.column,selected:true}))
+            table_fields.value.push({table:table.name,child:table.object?.child,columns})
         })
     }
 }

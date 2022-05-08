@@ -25,6 +25,7 @@ export function update_query() {
 
     for(const field of table_fields.value)
     {
+        console.log(field)
         let all_selected_columns = true
         let none_selected = true
         let selected_columns = ''
@@ -38,7 +39,7 @@ export function update_query() {
             else
             {
                 none_selected = false
-                selected_columns += `<span class="${field.child?'highlight-child':'highlight-parent'}">\`${field.table}\`</span>.\`${column.name}\`,<br>`
+                selected_columns += `<span class="${field.child==null?'':field.child?'highlight-child':'highlight-parent'}">\`${field.table}\`</span>.\`${column.name}\`,<br>`
             }
         }
         if(!none_selected)
@@ -49,7 +50,7 @@ export function update_query() {
             }
             else
             {
-                selected_tables += `\`${field.table}\`.*,<br>`
+                selected_tables += `<span class="${field.child==null?'':field.child?'highlight-child':'highlight-parent'}">\`${field.table}\`</span>.*,<br>`
             }
         }
     }

@@ -8,12 +8,6 @@ import { move, back, active_fields, update_query, fields, query } from './fields
 
 update()
 
-
-
-
-
-
-
 </script>
 
 <template>
@@ -53,11 +47,13 @@ update()
           />
       </div>
     </div>
+    <!-- <div class="content-data form-control">
+
+    </div> -->
     <div class="row content-data">
       <div class="col">
-      <div class="form-control" v-html="query">
-
-      </div>
+        <div class="form-control" v-html="query">
+        </div>
       </div>
     </div>
   </div>
@@ -80,7 +76,12 @@ update()
   color: blue;
 }
 
-
+.highlight-child{
+    color: #12c6f3;
+}
+.highlight-parent{
+    color: #f554d2;
+}
 
 </style>
 

@@ -5,6 +5,7 @@ export interface foreign_key_data {
     relative?:foreign_key_data,
     join:string,
     display_dropdown?:boolean,
+    child?:boolean
 
     TABLE_NAME: string,
     COLUMN_NAME: string,

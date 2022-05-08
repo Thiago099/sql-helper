@@ -28,8 +28,10 @@ export function update_query() {
     }
 
     const joins: join_data[] = []
-    function join(parent: string, parent_field: string, child: string, child_field: string, alias: string, relative?: foreign_key_data, join?: string) {
-        return `<span class="highlight">${join} JOIN</span> ${parent == alias ? alias : `${parent} <span class="highlight">AS</span> ${alias}`} <span class="highlight">ON</span> ${alias}.${parent_field} = ${relative?.alias ?? child}.${child_field}<br>`
+    function join(parent: string, parent_field: string, child: string, child_field: string, alias: string, relative?: foreign_key_data, join?: string, element?:foreign_key_data) {
+        const colored_element = `<span class="${element?.child?'highlight-child':'highlight-parent'}">`
+        const colored_relative = relative?.alias?`<span class="${relative?.child?'highlight-child':'highlight-parent'}">`:'<span>'
+        return `<span class="highlight">${join} JOIN</span> ${colored_element}${parent == alias ? alias : `${parent} <span class="highlight">AS</span> ${alias}`} <span class="highlight">ON</span> ${alias}</span>.${parent_field} = ${colored_relative}${relative?.alias ?? child}</span>.${child_field}<br>`
     }
     for (const child of active_fields.value.child) {
         child.supported = false
@@ -37,7 +39,7 @@ export function update_query() {
             element: child,
             parent: child.TABLE_NAME,
             child: child.REFERENCED_TABLE_NAME,
-            query: join(child.REFERENCED_TABLE_NAME, child.REFERENCED_COLUMN_NAME, child.TABLE_NAME, child.COLUMN_NAME, child.alias, child.relative, child.join)
+            query: join(child.REFERENCED_TABLE_NAME, child.REFERENCED_COLUMN_NAME, child.TABLE_NAME, child.COLUMN_NAME, child.alias, child.relative, child.join,child)
         })
     }
     for (const parent of active_fields.value.parent) {
@@ -46,7 +48,7 @@ export function update_query() {
             element: parent,
             parent: parent.REFERENCED_TABLE_NAME,
             child: parent.TABLE_NAME,
-            query: join(parent.TABLE_NAME, parent.COLUMN_NAME, parent.REFERENCED_TABLE_NAME, parent.REFERENCED_COLUMN_NAME, parent.alias, parent.relative, parent.join)
+            query: join(parent.TABLE_NAME, parent.COLUMN_NAME, parent.REFERENCED_TABLE_NAME, parent.REFERENCED_COLUMN_NAME, parent.alias, parent.relative, parent.join,parent)
         })
     }
 
@@ -82,11 +84,13 @@ export function find_relations() {
         )
     }
     fields.value.child.forEach((item: foreign_key_data) => {
+        item.child = true
         item.join = 'INNER'
         item.alias = item.REFERENCED_TABLE_NAME
         item.relative = affected.value.find(affected => affected.name == item.TABLE_NAME)?.object
     })
     fields.value.parent.forEach((item: foreign_key_data) => {
+        item.child = false
         item.join = 'INNER'
         item.alias = item.TABLE_NAME
         item.relative = affected.value.find(affected => affected.name == item.REFERENCED_TABLE_NAME)?.object

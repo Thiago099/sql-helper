@@ -1,11 +1,34 @@
 <script setup lang="ts">
-import { ref, toRefs, defineProps} from 'vue';
+import { ref, toRefs, defineProps, defineEmits} from 'vue';
 import { foreign_key_data } from './foreign_key_data';
 const props = defineProps<{
     fields: {[key:string]:foreign_key_data[]}
     active:boolean
 }>()
 const { fields,active } = toRefs(props)
+
+let lastMouseDown:any = null;
+document.addEventListener(
+    "mousedown",
+    event => {
+        lastMouseDown = event;
+    },
+    true // A capture handler
+);
+function prevent(e:Event) {
+    e.stopPropagation();
+    e.preventDefault();
+}
+
+const menu = ref<HTMLElement[]>()
+const emit = defineEmits(['child', 'parent'])
+function act(event:string,element:foreign_key_data) {
+    if(menu.value?.some(item => item.contains(lastMouseDown.target)))
+        return
+    emit(event as "child" | "parent", element)
+}
+
+
 </script>
 
 
@@ -16,9 +39,9 @@ const { fields,active } = toRefs(props)
             :key="child.tid"
             class="table-field table-child"
             :class="{'error': !child.supported && active}"
-            @click="$emit('child', child)"
+            @click="act('child',child)"
         >
-        <div v-if="active" style="display:inline"  @click="$event.stopPropagation()">
+        <div v-if="active" style="display:inline"  @click="$event.stopPropagation()" ref="menu">
             <span style="padding: 10px;" class="dropdown-toggle" @click="child.display_dropdown = true;" tabindex="0"  @blur="child.display_dropdown = false"> {{child.join}}
                 <div class="dropdown-menu" :class="{'show':child.display_dropdown}" >
                     <a class="dropdown-item" href="#" @mousedown="child.join = 'INNER';$emit('update')">INNER</a>
@@ -28,7 +51,7 @@ const { fields,active } = toRefs(props)
             </span>&nbsp;
         </div>  
             <span class="table-name">{{ child.REFERENCED_TABLE_NAME }}</span> <span class="table-column">({{ child.COLUMN_NAME }})</span>
-            <div v-if="active" style="display:inline"  @click="$event.stopPropagation()">
+            <div v-if="active" style="display:inline"  @click="$event.stopPropagation()" ref="menu">
             &nbsp;<input type="text" class="form-control" style="display: inline;width: 150px;margin:0px" v-model="child.alias" @input="$emit('update')">
             </div>
         </div>
@@ -38,9 +61,9 @@ const { fields,active } = toRefs(props)
             class="table-field table-parent"
             :class="{'error': !parent.supported && active}"
 
-            @click="$emit('parent', parent)"
+            @click="act('parent', parent)"
         >
-        <div v-if="active" style="display:inline"  @click="$event.stopPropagation()">
+        <div v-if="active" style="display:inline"  @click="$event.stopPropagation()" ref="menu">
             <span style="padding: 10px;" class="dropdown-toggle" @click="parent.display_dropdown = true;" tabindex="0"  @blur="parent.display_dropdown = false"> {{parent.join}}
                 <div class="dropdown-menu" :class="{'show':parent.display_dropdown}" >
                     <a class="dropdown-item" href="#" @mousedown="parent.join = 'INNER';$emit('update')">INNER</a>
@@ -50,7 +73,7 @@ const { fields,active } = toRefs(props)
             </span>&nbsp;
         </div>  
         <span class="table-name">{{ parent.TABLE_NAME }}</span> <span class="table-column">({{ parent.COLUMN_NAME }})</span>
-            <div v-if="active" style="display:inline"  @click="$event.stopPropagation()">
+            <div v-if="active" style="display:inline"  @click="$event.stopPropagation()" ref="menu">
                 &nbsp;<input type="text" class="form-control" style="display: inline;width: 150px;margin:0px" v-model="parent.alias" @input="$emit('update')">
             </div>
         </div>

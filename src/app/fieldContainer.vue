@@ -19,7 +19,7 @@ const { fields,active } = toRefs(props)
             @click="$emit('child', child)"
         >
         <div v-if="active" style="display:inline"  @click="$event.stopPropagation()">
-            <span class="dropdown-toggle" @click="child.display_dropdown = true;" tabindex="0"  @blur="child.display_dropdown = false"> {{child.join}}
+            <span style="padding: 10px;" class="dropdown-toggle" @click="child.display_dropdown = true;" tabindex="0"  @blur="child.display_dropdown = false"> {{child.join}}
                 <div class="dropdown-menu" :class="{'show':child.display_dropdown}" >
                     <a class="dropdown-item" href="#" @mousedown="child.join = 'INNER';$emit('update')">INNER</a>
                     <a class="dropdown-item" href="#" @mousedown="child.join = 'LEFT';$emit('update')">LEFT</a>
@@ -41,7 +41,7 @@ const { fields,active } = toRefs(props)
             @click="$emit('parent', parent)"
         >
         <div v-if="active" style="display:inline"  @click="$event.stopPropagation()">
-            <span class="dropdown-toggle" @click="parent.display_dropdown = true;" tabindex="0"  @blur="parent.display_dropdown = false"> {{parent.join}}
+            <span style="padding: 10px;" class="dropdown-toggle" @click="parent.display_dropdown = true;" tabindex="0"  @blur="parent.display_dropdown = false"> {{parent.join}}
                 <div class="dropdown-menu" :class="{'show':parent.display_dropdown}" >
                     <a class="dropdown-item" href="#" @mousedown="parent.join = 'INNER';$emit('update')">INNER</a>
                     <a class="dropdown-item" href="#" @mousedown="parent.join = 'LEFT';$emit('update')">LEFT</a>

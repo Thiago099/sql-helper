@@ -119,8 +119,11 @@ function update_query()
 
     for(const join of current)
     {
-      join.element.supported = true
-      result += join.query
+      if(joins.filter(item => item.element.tid != join.element.tid && item.element.alias == join.element.alias).length == 0)
+      {
+        join.element.supported = true
+        result += join.query
+      }
       build(join.child)
     }
   }

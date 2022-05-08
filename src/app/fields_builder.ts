@@ -68,6 +68,8 @@ export function update_query() {
 
     query.value = result
 }
+import { find_fields } from './fields';
+
 export function find_relations() {
     fields.value = {
         child: foreign_keys.value.filter(
@@ -98,6 +100,7 @@ export function find_relations() {
 
     sort(fields.value)
     update_query()
+    find_fields()
 }
 
 

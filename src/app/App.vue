@@ -6,6 +6,8 @@ import { database, databases, table, tables, update, update_fields } from './dat
 
 import { move, back, active_fields, update_query, fields, query } from './fields_builder'
 
+import { table_fields } from './fields'
+
 update()
 
 </script>
@@ -47,9 +49,9 @@ update()
           />
       </div>
     </div>
-    <!-- <div class="content-data form-control">
-
-    </div> -->
+    <div class="content-data form-control">
+      {{ table_fields }}
+    </div>
     <div class="row content-data">
       <div class="col">
         <div class="form-control" v-html="query">

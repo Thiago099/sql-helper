@@ -21,7 +21,7 @@ function prevent(e:Event) {
 }
 
 const menu = ref<HTMLElement[]>()
-const emit = defineEmits(['child', 'parent'])
+const emit = defineEmits(['child', 'parent','update'])
 function act(event:string,element:foreign_key_data) {
     if(menu.value?.some(item => item.contains(lastMouseDown.target)))
         return

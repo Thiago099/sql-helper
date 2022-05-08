@@ -9,7 +9,7 @@ export const tables = ref([])
 export const database = ref<string | null>(null)
 export const table = ref<string | null>(null)
 
-
+import { table_fields } from './fields';
 
 import { connection } from '@/global/mysql'
 
@@ -45,6 +45,7 @@ export function update() {
     active_fields.value = { parent: [], child: [] }
     fields.value = { parent: [], child: [] }
     affected.value = [{ name: table.value ?? '' }]
+    table_fields.value = []
     query.value = ''
 }
 

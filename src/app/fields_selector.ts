@@ -9,6 +9,7 @@ import { foreign_key_data } from './foreign_key_data';
 
 export function find_fields()
 {
+    const old = table_fields.value
     table_fields.value = []
     for(const element of affected.value)
     {
@@ -20,8 +21,16 @@ export function find_fields()
         connection.query(`SELECT COLUMN_NAME \`column\` FROM information_schema.columns WHERE table_schema = database() and table_name='${table.name}' ORDER BY COLUMN_NAME`,
         (error:any,result:any)=>{
             const columns:any = []
-            result.forEach((item:any) => columns.push({name:item.column,selected:true}))
-            table_fields.value.push({table,child:table.object?.child,columns})
+            const old_value = old.find((item:any) => item.table == table)
+            if(old_value)
+            {
+                table_fields.value.push(old_value)
+            }
+            else
+            {
+                result.forEach((item:any) => columns.push({name:item.column,selected:true}))
+                table_fields.value.push({table,child:table.object?.child,columns})
+            }
         })
     }
 }

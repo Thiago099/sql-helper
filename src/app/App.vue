@@ -25,7 +25,6 @@ const filter = ref('')
 const tab = ref('Join')
 const tabs = ['Join', 'Fields', 'Result']
 
-
 const element = ref()
 
 onMounted(()=>{

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import fieldContainer from './fieldContainer.vue'
 
@@ -25,6 +25,21 @@ const filter = ref('')
 const tab = ref('Join')
 const tabs = ['Join', 'Fields', 'Result']
 
+
+const element = ref()
+
+onMounted(()=>{
+  element.value.setAttribute('contenteditable', true);
+  element.value.spellcheck = false;
+  element.value.oncut = () => false;
+  element.value.onpaste = () => false;
+  element.value.onkeydown = (event:any) => {
+    if (event.metaKey || event.ctrlKey) {
+      return;
+    }
+    event.preventDefault();
+  }
+})
 </script>
 
 <template>
@@ -90,7 +105,7 @@ const tabs = ['Join', 'Fields', 'Result']
       </div>
     </div>
     <div v-show="tab == 'Result'">
-      <div class="row content-data form-control" style="height:85vh">
+      <div class="row content-data form-control" style="height:85vh;caret-color: transparent;" ref="element">
         <div class="col">
           <div class="form-area" v-html="query">
           </div>

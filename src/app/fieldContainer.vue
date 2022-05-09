@@ -61,7 +61,7 @@ const filter = ref('')
 
         <div v-for="field of Object.keys(grouped_fields)" :key="field">
             <span class="table-field separator">
-            {{field == 0 ? table : foreign_keys.find(item => item.tid == field).alias}}
+            {{field == '0' ? table : foreign_keys.find(item => item.tid == Number(field)).alias}}
             </span>
             <div 
                 v-for="child of grouped_fields[field].child?.filter(item => item.REFERENCED_TABLE_NAME.includes(filter))" 

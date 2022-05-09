@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { affected } from './query_builder'
 import { onMounted, ref } from 'vue'
 
 import fieldContainer from './fieldContainer.vue'
@@ -111,6 +112,7 @@ onMounted(()=>{
         </div>
       </div>
     </div>
+    {{affected}}
   </div>
 </template>
 <style lang="less">

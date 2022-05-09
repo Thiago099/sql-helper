@@ -41,7 +41,7 @@ export function update() {
             if (err) {
                 console.log(err)
             } else {
-                let tid = 0
+                let tid = 1
                 rows.forEach((row: foreign_key_data) => { row.tid = tid++; row.display_dropdown = false })
                 foreign_keys.value = rows
             }

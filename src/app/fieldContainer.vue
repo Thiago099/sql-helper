@@ -57,7 +57,7 @@ const filter = ref('')
 <template>
     <i class="fa fa-search text-muted" style="position:absolute;margin-top:20px;margin-left:15px"></i>
     <input type="text" class="form-control" v-model="filter" style="padding-left:40px">
-    <div class="form-control table-content content-data" style="height:70vh">
+    <div class="form-control table-content content-data" style="height:65vh">
 
         <div v-for="field of Object.keys(grouped_fields)" :key="field">
             <span class="table-field separator">

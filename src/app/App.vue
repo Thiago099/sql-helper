@@ -19,6 +19,8 @@ function set_selected(e:any, objects:any)
     update_query()
 }
 
+const filter = ref('')
+
 </script>
 
 <template>
@@ -64,17 +66,19 @@ function set_selected(e:any, objects:any)
           />
       </div>
     </div>
-    <div class="content-data form-control">
+    <i class="fa fa-search" style="position:absolute;margin-top:20px;margin-left:15px"></i>
+    <input type="text" class="form-control" v-model="filter" style="padding-left:40px">
+    <div class="content-data form-area form-control">
       <div v-for="({table, columns}) of table_fields" :key="table">
-      <input type="checkbox" :checked="columns.every((item: any) => item.selected == true)" @click="set_selected($event, columns)">   {{table?.object?.alias ?? table.name}}
-        <div v-for="(column) of columns" :key="column.name">
+      <input type="checkbox" :checked="columns.every((item) => item.selected == true)" @click="set_selected($event, columns)"> {{table?.object?.alias ?? table.name}}
+        <div v-for="(column) of columns.filter(item=>item.name.includes(filter))" :key="column.name">
           &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" v-model="column.selected" @change="update_query()"> {{column.name}}
         </div >
       </div>
     </div>
-    <div class="row content-data">
+    <div class="row content-data form-control">
       <div class="col">
-        <div class="form-control" v-html="query">
+        <div class="form-area" v-html="query">
         </div>
       </div>
     </div>
@@ -90,13 +94,16 @@ function set_selected(e:any, objects:any)
   overflow-y: auto;
   margin-top: 10px;
   display: inline-block;
-  .form-control{
+  .form-area{
     height:80%;
 
     overflow-y: auto;
   }
 }
-
+.form-control{
+  margin-top:10px;
+  margin-bottom: 20px;
+}
 .highlight{
   color: blue;
 }

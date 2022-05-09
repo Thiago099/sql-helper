@@ -48,6 +48,7 @@ function act(event:string,element:foreign_key_data) {
     emit(event as "child" | "parent", element)
 }
 
+
 </script>
 
 

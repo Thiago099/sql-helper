@@ -36,7 +36,8 @@ export function update() {
         FROM information_schema.TABLE_CONSTRAINTS
         INNER JOIN information_schema.KEY_COLUMN_USAGE ON TABLE_CONSTRAINTS.CONSTRAINT_NAME = KEY_COLUMN_USAGE.CONSTRAINT_NAME
         WHERE TABLE_CONSTRAINTS.CONSTRAINT_TYPE = 'FOREIGN KEY'
-        AND TABLE_CONSTRAINTS.TABLE_SCHEMA = '${database.value}'`, (err, rows) => {
+        AND TABLE_CONSTRAINTS.TABLE_SCHEMA = '${database.value}'
+        AND KEY_COLUMN_USAGE.TABLE_SCHEMA = '${database.value}'`, (err, rows) => {
             if (err) {
                 console.log(err)
             } else {

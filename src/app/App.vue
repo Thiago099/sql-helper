@@ -30,16 +30,16 @@ function set_selected(e:any, objects:any)
           <select name="" id="" v-model="database" class="form-select" @change="update()">
             <option :value="Database" v-for="({Database}) in databases" :key="Database"> {{ Database }} </option>
           </select>
-            <button class="btn btn-primary" @click="update_databases();update()"><i class="fa fa-rotate-left" ></i></button>
+            <button class="btn btn-primary" @click="update_databases();update();database=null;table=null"><i class="fa fa-rotate-left" ></i></button>
         </div>
       </div>
       <div class="col-6 form-group">
         <label for="">Tables</label>
         <div class="input-group">
-          <select name="" id="" class="form-select" v-model="table" @change="update_fields()">
+          <select name="" id="" class="form-select" v-model="table" @change="update_fields();">
             <option :value="table" v-for="table in tables" :key="table"> {{ table }} </option>
           </select>
-          <button class="btn btn-primary" @click="update()"><i class="fa fa-rotate-left" ></i></button>
+          <button class="btn btn-primary" @click="update();table=null"><i class="fa fa-rotate-left" ></i></button>
         </div>
       </div>
     </div>

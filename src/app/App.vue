@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+
 import fieldContainer from './fieldContainer.vue'
 
 import { database, databases, table, tables, update_databases ,update, update_fields } from './database_selector'
@@ -84,7 +85,8 @@ const tabs = ['Join', 'Fields', 'Result']
         <div v-for="({table, columns}) of table_fields" :key="table" >
         <input type="checkbox" :checked="columns.every((item) => item.selected == true)" @click="set_selected($event, columns)"> {{table?.object?.alias ?? table.name}}
           <div v-for="(column) of columns.filter(item=>item.name.includes(filter))" :key="column.name">
-            &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" v-model="column.selected" @change="update_query()"> {{column.name}}
+            &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" v-model="column.selected" @change="update_query()"> {{column.name}} 
+            <input type="text" v-model="column.alias" @change="update_query()" class="form-control" style="display:inline;width:200px;height:25px;margin:5px">
           </div >
         </div>
       </div>

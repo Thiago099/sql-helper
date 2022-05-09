@@ -28,7 +28,7 @@ export function find_fields()
             }
             else
             {
-                result.forEach((item:any) => columns.push({name:item.column,selected:true}))
+                result.forEach((item:any) => columns.push({name:item.column,alias:item.column,selected:true}))
                 table_fields.value.push({table,child:table.object?.child,columns})
             }
         })

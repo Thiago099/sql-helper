@@ -37,6 +37,13 @@ export function update_query() {
             else
             {
                 none_selected = false
+                if(column.alias != column.name)
+                {
+                    all_selected_tables = false
+                    all_selected_columns = false
+                    selected_columns += `<span class="${field.child==null?'highlight-main':field.child?'highlight-child':'highlight-parent'}">\`${field.table?.object?.alias ?? field.table.name}\`</span>.\`${column.name}\` ${column.alias},<br>`
+                }
+                else
                 selected_columns += `<span class="${field.child==null?'highlight-main':field.child?'highlight-child':'highlight-parent'}">\`${field.table?.object?.alias ?? field.table.name}\`</span>.\`${column.name}\`,<br>`
             }
         }

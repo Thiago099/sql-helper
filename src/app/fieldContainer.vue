@@ -48,18 +48,23 @@ function act(event:string,element:foreign_key_data) {
     emit(event as "child" | "parent", element)
 }
 
+const filter = ref('')
+
 
 </script>
 
 
 <template>
-    <div class="form-control table-content content-data">
+    <i class="fa fa-search text-muted" style="position:absolute;margin-top:20px;margin-left:15px"></i>
+    <input type="text" class="form-control" v-model="filter" style="padding-left:40px">
+    <div class="form-control table-content content-data" style="height:70vh">
+
         <div v-for="field of Object.keys(grouped_fields)" :key="field">
             <span class="table-field separator">
             {{field == 0 ? table : foreign_keys.find(item => item.tid == field).alias}}
             </span>
             <div 
-                v-for="child of grouped_fields[field].child" 
+                v-for="child of grouped_fields[field].child?.filter(item => item.REFERENCED_TABLE_NAME.includes(filter))" 
                 :key="child.tid"
                 class="table-field table-child"
                 :class="{'error': !child.supported && active}"
@@ -80,7 +85,7 @@ function act(event:string,element:foreign_key_data) {
                 </div>
             </div>
             <div 
-                v-for="parent of grouped_fields[field].parent" 
+                v-for="parent of grouped_fields[field].parent?.filter(item => item.TABLE_NAME.includes(filter))" 
                 :key="parent.tid" 
                 class="table-field table-parent"
                 :class="{'error': !parent.supported && active}"
@@ -88,7 +93,7 @@ function act(event:string,element:foreign_key_data) {
                 @click="act('parent', parent)"
             >
             <div v-if="active" style="display:inline"  @click="$event.stopPropagation()" ref="menu">
-                <span style="padding: 10px;" class="dropdown-toggle" @click="parent.display_dropdown = true;" tabindex="0"  @blur="parent.display_dropdown = false"> {{parent.join}}
+                <span style="padding: 10px;" class="dropdown-toggle" @click="parent.display_dropdown = !parent.display_dropdown;" tabindex="0"  @blur="parent.display_dropdown = false"> {{parent.join}}
                     <div class="dropdown-menu" :class="{'show':parent.display_dropdown}" >
                         <a class="dropdown-item" href="#" @mousedown="parent.join = 'INNER';$emit('update')">INNER</a>
                         <a class="dropdown-item" href="#" @mousedown="parent.join = 'LEFT';$emit('update')">LEFT</a>

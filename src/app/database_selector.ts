@@ -23,7 +23,7 @@ export function update_databases()
 
 export function update() {
     if (database.value != null) {
-        connection.query(`USE ${database.value}`)
+        connection.query(`USE \`${database.value}\``)
         connection.query(`SHOW TABLES`, (err: any, results: any) => {
             const key = Object.keys(results[0])[0]
             tables.value = results.map((result: any) => result[key])

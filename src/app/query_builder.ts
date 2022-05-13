@@ -137,14 +137,14 @@ export function find_relations() {
     })
     active_fields.value.child.forEach((item: foreign_key_data) => {
         item.child = true
-        item.join = 'INNER'
-        item.alias = item.REFERENCED_TABLE_NAME
+        item.join = item.join ?? 'INNER'
+        item.alias = item.alias ?? item.REFERENCED_TABLE_NAME
         item.relative = affected.value.find(affected => affected.name == item.TABLE_NAME)?.object
     })
     active_fields.value.parent.forEach((item: foreign_key_data) => {
         item.child = false
-        item.join = 'INNER'
-        item.alias = item.TABLE_NAME
+        item.join = item.join ?? 'INNER'
+        item.alias = item.alias ?? item.TABLE_NAME
         item.relative = affected.value.find(affected => affected.name == item.REFERENCED_TABLE_NAME)?.object
     })
 
@@ -161,6 +161,7 @@ export function move(object: foreign_key_data, destination: string) {
     affected.value.push({ name: destination == 'child' ? object.REFERENCED_TABLE_NAME : object.TABLE_NAME, object })
     find_relations()
     sort(active_fields.value)
+    update_query()
 }
 
 export function back(object: foreign_key_data, destination: string) {
@@ -170,6 +171,7 @@ export function back(object: foreign_key_data, destination: string) {
     affected.value = affected.value.filter((item: iaffected) => item.name != table_name)
     find_relations()
     sort(fields.value)
+    update_query()
 }
 
 

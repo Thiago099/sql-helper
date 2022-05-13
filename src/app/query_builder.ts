@@ -128,7 +128,13 @@ export function find_relations() {
                 !active_fields.value.child.includes(item)
         )
     }
-    
+
+    fields.value.child.forEach((item: foreign_key_data) => {
+        item.relative = affected.value.find(affected => affected.name == item.TABLE_NAME)?.object
+    })
+    fields.value.parent.forEach((item: foreign_key_data) => {
+        item.relative = affected.value.find(affected => affected.name == item.REFERENCED_TABLE_NAME)?.object
+    })
     active_fields.value.child.forEach((item: foreign_key_data) => {
         item.child = true
         item.join = 'INNER'

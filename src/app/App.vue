@@ -94,7 +94,7 @@ onMounted(()=>{
     <div v-show="tab == 'Fields'">
       <i class="fa fa-search text-muted" style="position:absolute;margin-top:10px;margin-left:15px"></i>
       <input type="text" class="form-control" v-model="filter" style="padding-left:40px">
-      <div class="content-data form-area form-control" style="height:70vh">
+      <div class="content-data form-area form-control" style="height:calc(100vh - 160px)">
         <div v-for="({table, columns}) of table_fields" :key="table" >
         <input type="checkbox" :checked="columns.every((item) => item.selected == true)" @click="set_selected($event, columns)"> {{table?.object?.alias ?? table.name}}
           <div v-for="(column) of columns.filter(item=>item.name.includes(filter))" :key="column.name">
@@ -105,7 +105,7 @@ onMounted(()=>{
       </div>
     </div>
     <div v-show="tab == 'Result'">
-      <div class="row content-data form-control" style="height:85vh;caret-color: transparent;" ref="element">
+      <div class="row content-data form-control" style="height:calc(100vh - 100px);caret-color: transparent;" ref="element">
         <div class="col">
           <div class="form-area" v-html="query">
           </div>

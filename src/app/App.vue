@@ -42,6 +42,7 @@ onMounted(()=>{
 </script>
 
 <template>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <div class="container">
     <ul class="nav nav-tabs">
       <li class="nav-item" v-for="tab_link in tabs" :key="tab_link">
@@ -69,7 +70,7 @@ onMounted(()=>{
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" >
         <div class="col-4">
           <field-container
             :active="false"

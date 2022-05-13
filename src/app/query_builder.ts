@@ -139,7 +139,7 @@ export function find_relations() {
         item.child = false
         item.join = 'INNER'
         item.alias = item.TABLE_NAME
-        item.relative = affected.value.find(affected => affected.name == item.REFERENCED_TABLE_NAME)?.object
+        item.relative = affected.value.find(affected => affected.name == item.TABLE_NAME)?.object
     })
 
     sort(fields.value)

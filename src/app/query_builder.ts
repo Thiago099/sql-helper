@@ -129,17 +129,17 @@ export function find_relations() {
         )
     }
     
-    fields.value.child.forEach((item: foreign_key_data) => {
+    active_fields.value.child.forEach((item: foreign_key_data) => {
         item.child = true
         item.join = 'INNER'
         item.alias = item.REFERENCED_TABLE_NAME
         item.relative = affected.value.find(affected => affected.name == item.TABLE_NAME)?.object
     })
-    fields.value.parent.forEach((item: foreign_key_data) => {
+    active_fields.value.parent.forEach((item: foreign_key_data) => {
         item.child = false
         item.join = 'INNER'
         item.alias = item.TABLE_NAME
-        item.relative = affected.value.find(affected => affected.name == item.TABLE_NAME)?.object
+        item.relative = affected.value.find(affected => affected.name == item.REFERENCED_TABLE_NAME)?.object
     })
 
     sort(fields.value)

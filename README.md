@@ -1,6 +1,7 @@
 # description
 
 this program was made to build sql joins with a simple click
+
 it is currently work in progress so it yet don't work very well when the same table is called multiple times
 
 ![example](https://i.imgur.com/pzXfVul.png)
